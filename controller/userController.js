@@ -1,4 +1,6 @@
 const users= require('../models/userModel')
+//jwtwebtoken
+const jwt = require('jsonwebtoken')
 
 //register api call 
 exports.registerController = async(req,res)=>{
@@ -18,6 +20,34 @@ exports.registerController = async(req,res)=>{
             })
             await newUser.save()
             res.status(200).json(newUser)
+        }
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json(error)
+        
+    }
+    //res.status(200).json("Request Received")
+}
+
+//login api
+exports.loginController = async(req,res)=>{
+    console.log("Inside LoginController");
+    console.log(req.body);
+    const {email,password} = req.body 
+    try{
+        const existingUser = await users.findOne({email})
+        if(existingUser){
+            if(password == existingUser.password){
+                const token = jwt.sign({usermail:existingUser.email,role:existingUser.role},process.env.JWTSECRET)
+                res.status(200).json({user:existingUser,token})
+            }
+            else{
+                res.status(401).json("Incorrect Email/Password")
+            }
+        }
+        else{
+            res.status(400).json("Account Doesnot Exist !!")
         }
     }
     catch(error){

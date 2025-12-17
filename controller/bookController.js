@@ -46,7 +46,9 @@ exports.getHomeBooksController = async (req,res)=>{
 exports.getUserAllBooksController = async (req,res)=>{
     console.log("Inside getUserAllBooksController");
     //get login user mail from token
-    const loginUserMail = res.payload
+    const loginUserMail = req.payload
+    //console.log(loginUserMail);
+    
     try{
         //get all books from db except logged in user
         const allBooks = await books.find({sellerMail:{$ne:loginUserMail}})
@@ -63,7 +65,7 @@ exports.getUserAllBooksController = async (req,res)=>{
 exports.getUserUploadProfileBooksController = async (req,res)=>{
     console.log("Inside getUserUploadProfileBooksController");
     //get login user mail from token
-    const loginUserMail = res.payload
+    const loginUserMail = req.payload
     try{
         //get all books from db that user uploaded
         const allUserBooks = await books.find({sellerMail:loginUserMail})
@@ -79,7 +81,7 @@ exports.getUserUploadProfileBooksController = async (req,res)=>{
 exports.getUserBoughtProfileBooksController = async (req,res)=>{
     console.log("Inside getUserBoughtProfileBooksController");
     //get login user mail from token
-    const loginUserMail = res.payload
+    const loginUserMail = req.payload
     try{
         //get all books from db which user bought
         const allUserPurchasedBooks = await books.find({buyerMail:loginUserMail})
